@@ -1,29 +1,73 @@
 # Docker
+
 # Build a Docker image
+
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
 trigger:
+
 - master
 
 resources:
+
 - repo: self
 
 variables:
+
+  ImageName: 'khouloudbo/repo_aks:$(Build.BuildId)' 
+
   tag: '$(Build.BuildId)'
 
 stages:
+
 - stage: Build
+
   displayName: Build image
+
   jobs:
+
   - job: Build
+
     displayName: Build
+
     pool:
+
       vmImage: ubuntu-latest
+
     steps:
+
     - task: Docker@2
-      displayName: Build an image
+
+      displayName: Build frontend image
+
       inputs:
+
+        containerRegistry: 'Docker Hub'
+
+        repository: 'khouloudbo/repo_aks'
+
         command: build
-        dockerfile: '$(Build.SourcesDirectory)/auth-api/Dockerfile'
+
+        dockerfile: '$(Build.SourcesDirectory)/frontend/Dockerfile'
+
+        imageName: 'frontend'
+
         tags: |
+
           $(tag)
+
+    - task: Docker@2
+
+      displayName: 'Push the Frontend Docker image to Dockerhub'
+
+      inputs:
+
+        containerRegistry: 'Docker Hub'
+
+        repository: 'khouloudbo/repo_aks'
+
+        command: 'push'
+
+        imageName: 'frontend'
+
+      condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
