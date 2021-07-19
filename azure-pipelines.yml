@@ -1,4 +1,13 @@
 # Docker
+- task: versioncounter@1
+  inputs:
+    VersionVariable: 'versionnumber'
+    UpdateMinorVersion: true
+    MaxValuePatchVersion: '9'
+    UpdateMajorVersion: true
+    MaxValueMinorVersion: '9'
+    OnlyUpdateMinor: true
+    DevOpsPat: 'ny5hukuupgclx5hlsadpqgbnradc42nm7grog2gbccuv2tjq64iq'
 
 # Build a Docker image
 
